@@ -16,53 +16,53 @@ namespace Aurora\Modules\Autodiscover;
  */
 class Module extends \Aurora\System\Module\AbstractModule
 {
-	/**
-	 * Initializes Mail Module.
-	 * 
-	 * @ignore
-	 */
-	public function init() 
-	{
-		$this->AddEntries(array(
-				'autodiscover' => 'EntryAutodiscover'
-			)
-		);
-	}
-	
-	public function GetAutodiscover($Email)
-	{
-		return '';
-	}
-	
-	public function EntryAutodiscover()
-	{
-		$sInput = \file_get_contents('php://input');
+    /**
+     * Initializes Mail Module.
+     *
+     * @ignore
+     */
+    public function init()
+    {
+        $this->AddEntries(
+            array(
+                'autodiscover' => 'EntryAutodiscover'
+            )
+        );
+    }
 
-		\Aurora\System\Api::Log('#autodiscover:');
-		\Aurora\System\Api::LogObject($sInput);
+    public function GetAutodiscover($Email)
+    {
+        return '';
+    }
 
-		$aMatches = array();
-		$aEmailAddress = array();
-		\preg_match("/\<AcceptableResponseSchema\>(.*?)\<\/AcceptableResponseSchema\>/i", $sInput, $aMatches);
-		\preg_match("/\<EMailAddress\>(.*?)\<\/EMailAddress\>/", $sInput, $aEmailAddress);
-		if (!empty($aMatches[1]) && !empty($aEmailAddress[1]))
-		{
-			$sAutodiscover = $this->Decorator()->GetAutodiscover($aEmailAddress[1]);
+    public function EntryAutodiscover()
+    {
+        $sInput = \file_get_contents('php://input');
 
-			$sResult = \implode("\n", array(
+        \Aurora\System\Api::Log('#autodiscover:');
+        \Aurora\System\Api::LogObject($sInput);
+
+        $aMatches = array();
+        $aEmailAddress = array();
+        \preg_match("/\<AcceptableResponseSchema\>(.*?)\<\/AcceptableResponseSchema\>/i", $sInput, $aMatches);
+        \preg_match("/\<EMailAddress\>(.*?)\<\/EMailAddress\>/", $sInput, $aEmailAddress);
+        if (!empty($aMatches[1]) && !empty($aEmailAddress[1])) {
+            $sAutodiscover = $this->Decorator()->GetAutodiscover($aEmailAddress[1]);
+
+            $sResult = \implode("\n", array(
 '<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">',
 '	<Response xmlns="'.$aMatches[1].'">',
-$sAutodiscover,				
+$sAutodiscover,
 '	</Response>',
 '</Autodiscover>'));
-		}
+        }
 
-		if (empty($sResult))
-		{
-			$usec = $sec = 0;
-			list($usec, $sec) = \explode(' ', \microtime());
-			$sResult = \implode("\n", array('<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">',
-(empty($aMatches[1]) ?
+        if (empty($sResult)) {
+            $usec = $sec = 0;
+            list($usec, $sec) = \explode(' ', \microtime());
+            $sResult = \implode("\n", array('<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">',
+(
+    empty($aMatches[1]) ?
 '	<Response>' :
 '	<Response xmlns="'.$aMatches[1].'">'
 ),
@@ -73,14 +73,14 @@ $sAutodiscover,
 '		</Error>',
 '	</Response>',
 '</Autodiscover>'));
-		}
+        }
 
-		\header('Content-Type: text/xml');
-		$sResult = '<'.'?xml version="1.0" encoding="utf-8"?'.'>'."\n".$sResult;
-		
-		echo $sResult;
+        \header('Content-Type: text/xml');
+        $sResult = '<'.'?xml version="1.0" encoding="utf-8"?'.'>'."\n".$sResult;
 
-		\Aurora\System\Api::Log('');
-		\Aurora\System\Api::Log($sResult);		
-	}
+        echo $sResult;
+
+        \Aurora\System\Api::Log('');
+        \Aurora\System\Api::Log($sResult);
+    }
 }
