@@ -17,6 +17,14 @@ namespace Aurora\Modules\Autodiscover;
 class Module extends \Aurora\System\Module\AbstractModule
 {
     /**
+     * @return Module
+     */
+    public static function Decorator()
+    {
+        return parent::Decorator();
+    }
+
+    /**
      * Initializes Mail Module.
      *
      * @ignore
@@ -47,7 +55,7 @@ class Module extends \Aurora\System\Module\AbstractModule
         \preg_match("/\<AcceptableResponseSchema\>(.*?)\<\/AcceptableResponseSchema\>/i", $sInput, $aMatches);
         \preg_match("/\<EMailAddress\>(.*?)\<\/EMailAddress\>/", $sInput, $aEmailAddress);
         if (!empty($aMatches[1]) && !empty($aEmailAddress[1])) {
-            $sAutodiscover = $this->Decorator()->GetAutodiscover($aEmailAddress[1]);
+            $sAutodiscover = self::Decorator()->GetAutodiscover($aEmailAddress[1]);
 
             $sResult = \implode("\n", array(
 '<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">',
