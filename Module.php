@@ -77,7 +77,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 
             $sResult = \implode("\n", array(
 '<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/responseschema/2006">',
-'	<Response xmlns="'.$aMatches[1].'">',
+'	<Response xmlns="' . $aMatches[1] . '">',
 $sAutodiscover,
 '	</Response>',
 '</Autodiscover>'));
@@ -90,9 +90,9 @@ $sAutodiscover,
 (
     empty($aMatches[1]) ?
 '	<Response>' :
-'	<Response xmlns="'.$aMatches[1].'">'
+'	<Response xmlns="' . $aMatches[1] . '">'
 ),
-'		<Error Time="'.\gmdate('H:i:s', $sec).\substr($usec, 0, \strlen($usec) - 2).'" Id="2477272013">',
+'		<Error Time="' . \gmdate('H:i:s', $sec) . \substr($usec, 0, \strlen($usec) - 2) . '" Id="2477272013">',
 '			<ErrorCode>600</ErrorCode>',
 '			<Message>Invalid Request</Message>',
 '			<DebugData />',
@@ -102,7 +102,7 @@ $sAutodiscover,
         }
 
         \header('Content-Type: text/xml');
-        $sResult = '<'.'?xml version="1.0" encoding="utf-8"?'.'>'."\n".$sResult;
+        $sResult = '<' . '?xml version="1.0" encoding="utf-8"?' . '>' . "\n" . $sResult;
 
         echo $sResult;
 
